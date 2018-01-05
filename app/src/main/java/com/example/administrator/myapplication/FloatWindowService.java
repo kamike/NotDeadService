@@ -57,7 +57,7 @@ public class FloatWindowService extends Service {
 
         params.gravity = Gravity.CENTER;
         Button view = new Button(this);
-        view.setText("100像素的悬浮框");
+        view.setText("100px");
         view.setBackgroundColor(Color.RED);
         windowManager.addView(view, params);
         _thread.start();
