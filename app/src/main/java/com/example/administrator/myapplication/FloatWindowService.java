@@ -8,18 +8,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.Utils;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.Socket;
-
-import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
 /**
  * Created by wangtao on 2018/1/4.
@@ -45,7 +40,7 @@ public class FloatWindowService extends Service {
 //        int flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 //        int flags = FLAG_NOT_FOCUSABLE | FLAG_NOT_TOUCH_MODAL;
         // 如果设置了WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE，弹出的View收不到B-ack键的事件
-        params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         // 不设置这个弹出框的透明遮罩显示为黑色
 //        params.format = PixelFormat.TRANSLUCENT;
         // FLAG_NOT_TOUCH_MODAL不阻塞事件传递到后面的窗口
@@ -59,7 +54,17 @@ public class FloatWindowService extends Service {
         Button view = new Button(this);
         view.setText("100px");
         view.setBackgroundColor(Color.RED);
+        view.setOnClickListener(onclickView());
         windowManager.addView(view, params);
+    }
+
+    private View.OnClickListener onclickView() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.i("onclickView====");
+            }
+        };
     }
 
     @Override

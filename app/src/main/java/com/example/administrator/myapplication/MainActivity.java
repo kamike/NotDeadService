@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.android.floatwindowpermission.permission.FloatWindowManager;
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.Utils;
 
 public class MainActivity extends Activity {
@@ -17,11 +17,17 @@ public class MainActivity extends Activity {
         Utils.init(getApplication());
         setContentView(R.layout.activity_main);
         LogUtils.i("onCreate=======");
-        ServiceUtils.startService(FloatWindowService.class);
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        startActivity(intent);
+//        ServiceUtils.startService(FloatWindowService.class);
+//        Intent intent = new Intent(Intent.ACTION_MAIN);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addCategory(Intent.CATEGORY_HOME);
+//        startActivity(intent);
+
+        chcckPermiss();
+    }
+
+    private void chcckPermiss() {
+        FloatWindowManager.getInstance().applyOrShowFloatWindow(this);
     }
 
 
