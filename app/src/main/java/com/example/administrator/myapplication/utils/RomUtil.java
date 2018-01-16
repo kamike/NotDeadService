@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.example.administrator.myapplication.utils;
 
 import android.os.Build;
 import android.text.TextUtils;
@@ -12,7 +12,7 @@ import java.io.InputStreamReader;
  * Created by wangtao on 2018/1/13.
  */
 
-class RomUtil {
+public class RomUtil {
     private static final String TAG = "RomUtil";
 
     public static final String ROM_MIUI = "MIUI";

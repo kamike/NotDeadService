@@ -8,6 +8,10 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.Utils;
+import com.example.administrator.myapplication.service.FloatWindowService;
+import com.example.administrator.myapplication.utils.AdbUtils;
+import com.example.administrator.myapplication.utils.RomUtil;
+import com.example.administrator.myapplication.utils.SettingsCompat;
 
 public class MainActivity extends Activity {
 
@@ -25,6 +29,8 @@ public class MainActivity extends Activity {
 //        startActivity(intent);
 
         chcckPermiss();
+
+
     }
 
     private void chcckPermiss() {

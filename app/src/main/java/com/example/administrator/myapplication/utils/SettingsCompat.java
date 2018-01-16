@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.example.administrator.myapplication.utils;
 
 import android.Manifest;
 import android.app.AppOpsManager;

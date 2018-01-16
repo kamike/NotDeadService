@@ -1,4 +1,4 @@
-package com.example.administrator.myapplication;
+package com.example.administrator.myapplication.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

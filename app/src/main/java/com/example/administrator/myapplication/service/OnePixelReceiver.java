@@ -1,10 +1,11 @@
-package com.example.administrator.myapplication;
+package com.example.administrator.myapplication.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.util.Log;
+
+import com.example.administrator.myapplication.ui.OnePiexlActivity;
 
 /**
  * Created by Administrator on 2017-12-29.
