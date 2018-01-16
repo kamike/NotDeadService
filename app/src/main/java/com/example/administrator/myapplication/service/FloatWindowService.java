@@ -18,7 +18,6 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.SizeUtils;
-import com.blankj.utilcode.util.Utils;
 import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.utils.ActiityTaskUtils;
 import com.example.administrator.myapplication.utils.AdbUtils;
@@ -41,7 +40,7 @@ public class FloatWindowService extends Service {
     public void onCreate() {
         super.onCreate();
         context = this;
-        Utils.init(getApplication());
+
         WindowManager windowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
         // 类型

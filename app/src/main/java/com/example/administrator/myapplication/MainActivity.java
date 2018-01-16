@@ -5,11 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.blankj.utilcode.util.Utils;
-import com.example.administrator.myapplication.service.FloatWindowService;
-import com.example.administrator.myapplication.utils.AdbUtils;
 import com.example.administrator.myapplication.utils.RomUtil;
 import com.example.administrator.myapplication.utils.SettingsCompat;
 
@@ -19,10 +15,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Utils.init(getApplication());
+
         setContentView(R.layout.activity_main);
-        LogUtils.i("onCreate=======");
-        ServiceUtils.startService(FloatWindowService.class);
+        System.out.println("onCreate=======");
+//        ServiceUtils.startService(FloatWindowService.class);
 //        Intent intent = new Intent(Intent.ACTION_MAIN);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addCategory(Intent.CATEGORY_HOME);
