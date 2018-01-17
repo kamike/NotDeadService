@@ -73,5 +73,6 @@ public class ShowFloatView {
         }
         windowManager.removeView(view);
         view = null;
+        windowManager=null;
     }
 }

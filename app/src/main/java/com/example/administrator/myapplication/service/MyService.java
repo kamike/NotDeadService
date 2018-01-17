@@ -1,10 +1,11 @@
 package com.example.administrator.myapplication.service;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Build;
-import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -23,6 +24,7 @@ public class MyService extends AccessibilityService {
     protected void onServiceConnected() {
         super.onServiceConnected();
         System.out.println("onServiceConnected===========");
+        AccessibilityServiceInfo info = getServiceInfo();
     }
 
     @Override
@@ -31,20 +33,41 @@ public class MyService extends AccessibilityService {
         System.out.println("=========" + className);
         //com.tencent.mm.plugin.remittance.ui.RemittanceAdapterUI
         //com.tencent.mm.plugin.remittance.ui.RemittanceUI
+        if (className == null) {
+            return;
+        }
 
-        if (TextUtils.equals(className, "com.tencent.mm.plugin.remittance.ui.RemittanceUI")) {
+        if (className.toString().contains("android.widget")) {
+            return;
+        }
+
+        if (className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceUI")) {
             //
             if (showFloatView == null) {
                 showFloatView = new ShowFloatView(this);
                 showFloatView.showFloatview();
             }
-        } else {
-            if (showFloatView != null) {
-//                showFloatView.removeView();
+        }
+        if (className.toString().contains("launcher.Launcher")) {
+            System.out.println("====有launcher");
+        }
+
+        if (showFloatView != null) {
+            for (String page : hidePageArray) {
+                if (className.toString().contains(page)) {
+                    showFloatView.removeView();
+                    showFloatView = null;
+                    System.out.println("==========remove");
+                    break;
+                }
             }
         }
 
     }
+
+
+    private String[] hidePageArray = {"com.tencent.mm.ui.base.k", "com.tencent.mm.plugin.scanner.ui.BaseScanUI", "com.android.systemui", "launcher.Launcher",
+            "com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI"};
 
     private ShowFloatView showFloatView;
 
@@ -90,6 +113,23 @@ public class MyService extends AccessibilityService {
 
     public void findText() {
 
+    }
+
+    @Override
+    protected boolean onKeyEvent(KeyEvent event) {
+        int key = event.getKeyCode();
+        System.out.println("========onclick-key:" + key);
+        switch (key) {
+            case KeyEvent.KEYCODE_HOME:
+            case KeyEvent.KEYCODE_BACK:
+            case KeyEvent.KEYCODE_MENU:
+                if (showFloatView != null) {
+                    showFloatView.removeView();
+                }
+                break;
+
+        }
+        return super.onKeyEvent(event);
     }
 
 
