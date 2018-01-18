@@ -6,7 +6,10 @@ import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.example.administrator.myapplication.service.MyService;
+import com.example.administrator.myapplication.utils.AccessbilityUtils;
 import com.example.administrator.myapplication.utils.RomUtil;
+import com.example.administrator.myapplication.utils.SettingUtils;
 import com.example.administrator.myapplication.utils.SettingsCompat;
 
 public class MainActivity extends Activity {
@@ -27,6 +30,20 @@ public class MainActivity extends Activity {
         chcckPermiss();
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //com.example.administrator.myapplication/com.example.administrator.myapplication.service.MyService
+        String name=getPackageName()+"/"+ MyService.class.getName();
+        if(!AccessbilityUtils.checkAccessEnable(name,this)){
+            System.out.println("=====没有开启:"+name);
+            SettingUtils.startPage(this);
+        }else{
+            System.out.println("=====开启了辅助功能");
+            ToastUtils.showLong("开启了辅助功能");
+        }
     }
 
     private void chcckPermiss() {
