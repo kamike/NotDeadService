@@ -11,6 +11,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.example.administrator.myapplication.utils.ShowFloatView;
+import com.example.administrator.myapplication.utils.ShowFloatView2;
 
 import java.util.LinkedHashSet;
 
@@ -47,7 +48,22 @@ public class MyService extends AccessibilityService {
                 showFloatView = new ShowFloatView(this);
                 showFloatView.showFloatview();
             }
+            if (showFloatView2 != null) {
+                showFloatView2.removeView();
+                showFloatView2 = null;
+            }
         }
+        if (className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI")) {
+            if (showFloatView2 == null) {
+                showFloatView2 = new ShowFloatView2(this);
+                showFloatView2.showFloatview();
+                if (showFloatView != null) {
+                    showFloatView.removeView();
+                    showFloatView = null;
+                }
+            }
+        }
+
         if (className.toString().contains("launcher.Launcher")) {
             System.out.println("====有launcher");
         }
@@ -57,7 +73,16 @@ public class MyService extends AccessibilityService {
                 if (className.toString().contains(page)) {
                     showFloatView.removeView();
                     showFloatView = null;
-                    System.out.println("==========remove");
+                    break;
+                }
+            }
+        }
+
+        if (showFloatView2 != null) {
+            for (String page : hidePageArray) {
+                if (className.toString().contains(page)) {
+                    showFloatView2.removeView();
+                    showFloatView2 = null;
                     break;
                 }
             }
@@ -66,10 +91,10 @@ public class MyService extends AccessibilityService {
     }
 
 
-    private String[] hidePageArray = {"com.tencent.mm.ui.base.k", "com.tencent.mm.plugin.scanner.ui.BaseScanUI", "com.android.systemui", "launcher.Launcher",
-            "com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI"};
+    private String[] hidePageArray = {"com.tencent.mm.plugin.scanner.ui.BaseScanUI", "com.android.systemui", "launcher.Launcher", ".Launcher"};
 
     private ShowFloatView showFloatView;
+    private ShowFloatView2 showFloatView2;
 
 
     private void AddAllToListSource(LinkedHashSet<AccessibilityNodeInfo> lsit, AccessibilityNodeInfo node) {
