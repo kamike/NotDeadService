@@ -24,6 +24,7 @@ public class MyService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
+        currintPage = 0;
         System.out.println("onServiceConnected===========");
         AccessibilityServiceInfo info = getServiceInfo();
     }
@@ -47,6 +48,7 @@ public class MyService extends AccessibilityService {
             if (showFloatView == null) {
                 showFloatView = new ShowFloatView(this);
                 showFloatView.showFloatview();
+                currintPage = 1;
             }
             if (showFloatView2 != null) {
                 showFloatView2.removeView();
@@ -57,6 +59,7 @@ public class MyService extends AccessibilityService {
             if (showFloatView2 == null) {
                 showFloatView2 = new ShowFloatView2(this);
                 showFloatView2.showFloatview();
+                currintPage = 2;
                 if (showFloatView != null) {
                     showFloatView.removeView();
                     showFloatView = null;
@@ -67,28 +70,30 @@ public class MyService extends AccessibilityService {
         if (className.toString().contains("launcher.Launcher")) {
             System.out.println("====有launcher");
         }
+        if (showFloatView == null && showFloatView2 == null) {
+            return;
+        }
 
-        if (showFloatView != null) {
-            for (String page : hidePageArray) {
-                if (className.toString().contains(page)) {
+        for (String page : hidePageArray) {
+            if (className.toString().contains(page)) {
+                System.out.println("======remove");
+                if (showFloatView != null && currintPage == 1) {
                     showFloatView.removeView();
                     showFloatView = null;
-                    break;
                 }
-            }
-        }
-
-        if (showFloatView2 != null) {
-            for (String page : hidePageArray) {
-                if (className.toString().contains(page)) {
+                if (showFloatView2 != null && currintPage == 2) {
                     showFloatView2.removeView();
                     showFloatView2 = null;
-                    break;
                 }
+                currintPage = 0;
+                break;
             }
         }
 
+
     }
+
+    private int currintPage = 0;
 
 
     private String[] hidePageArray = {"com.tencent.mm.plugin.scanner.ui.BaseScanUI", "com.android.systemui", "launcher.Launcher", ".Launcher"};
