@@ -5,6 +5,8 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -12,8 +14,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import com.blankj.utilcode.util.LogUtils;
 import com.example.administrator.myapplication.utils.ShowFloatView;
 import com.example.administrator.myapplication.utils.ShowFloatView2;
-
-import java.util.LinkedHashSet;
+import com.example.administrator.myapplication.utils.ShowFloatView3;
 
 /**
  * Created by wangtao on 2017/9/5.
@@ -50,26 +51,27 @@ public class MyService extends AccessibilityService {
                 showFloatView.showFloatview();
                 currintPage = 1;
             }
-            if (showFloatView2 != null) {
-                showFloatView2.removeView();
-                showFloatView2 = null;
-            }
+            delayHandler.sendEmptyMessageDelayed(2, 280);
+            delayHandler.sendEmptyMessageDelayed(3, 280);
         }
         if (className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI")) {
             if (showFloatView2 == null) {
-                showFloatView2 = new ShowFloatView2(this);
-                showFloatView2.showFloatview();
-                currintPage = 2;
-                if (showFloatView != null) {
-                    showFloatView.removeView();
-                    showFloatView = null;
-                }
+                delayHandlerShow.sendEmptyMessageDelayed(2, 300);
+                delayHandler.sendEmptyMessageDelayed(1, 280);
+                delayHandler.sendEmptyMessageDelayed(3, 280);
+            }
+        }
+        if (className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceResultNewUI")) {
+            if (showFloatView3 == null) {
+                showFloatView3 = new ShowFloatView3(this);
+                showFloatView3.showFloatview();
+                currintPage = 3;
+                delayHandler.sendEmptyMessageDelayed(2, 280);
+                delayHandler.sendEmptyMessageDelayed(1, 280);
             }
         }
 
-        if (className.toString().contains("launcher.Launcher")) {
-            System.out.println("====有launcher");
-        }
+
         if (showFloatView == null && showFloatView2 == null) {
             return;
         }
@@ -77,13 +79,15 @@ public class MyService extends AccessibilityService {
         for (String page : hidePageArray) {
             if (className.toString().contains(page)) {
                 System.out.println("======remove");
+                //退出微信支付界面了
                 if (showFloatView != null && currintPage == 1) {
-                    showFloatView.removeView();
-                    showFloatView = null;
+                    delayHandler.sendEmptyMessageDelayed(1, 200);
                 }
                 if (showFloatView2 != null && currintPage == 2) {
-                    showFloatView2.removeView();
-                    showFloatView2 = null;
+                    delayHandler.sendEmptyMessageDelayed(2, 500);
+                }
+                if (currintPage == 3) {
+                    delayHandler.sendEmptyMessageDelayed(3, 200);
                 }
                 currintPage = 0;
                 break;
@@ -100,21 +104,63 @@ public class MyService extends AccessibilityService {
 
     private ShowFloatView showFloatView;
     private ShowFloatView2 showFloatView2;
+    private ShowFloatView3 showFloatView3;
 
+    private Handler delayHandlerShow = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
 
-    private void AddAllToListSource(LinkedHashSet<AccessibilityNodeInfo> lsit, AccessibilityNodeInfo node) {
-        if (node == null) {
-            return;
+                case 1:
+                    break;
+                case 2:
+                    if (showFloatView2 == null) {
+                        showFloatView2 = new ShowFloatView2(MyService.this);
+                        showFloatView2.showFloatview();
+                    }
+                    currintPage = 2;
+                    break;
+                case 3:
+                    break;
+                default:
+
+            }
         }
-        for (int index = 0; index < node.getChildCount(); index++) {
-            AccessibilityNodeInfo nodeChild = node.getChild(index);
-//            if (isCheckNode(nodeChild)) {
+    };
 
-            lsit.add(nodeChild);
-//            }
-            AddAllToListSource(lsit, nodeChild);
+
+    private Handler delayHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            System.out.println("======remove:" + msg.what);
+            switch (msg.what) {
+                case 1:
+                    if (showFloatView == null) {
+                        return;
+                    }
+                    showFloatView.removeView();
+                    showFloatView = null;
+
+                    break;
+                case 2:
+                    if (showFloatView2 == null) {
+                        return;
+                    }
+                    showFloatView2.removeView();
+                    showFloatView2 = null;
+                    break;
+                case 3:
+                    if (showFloatView3 == null) {
+                        return;
+                    }
+                    showFloatView3.removeView();
+                    showFloatView3 = null;
+                    break;
+                default:
+
+            }
         }
-    }
+    };
 
 
     @Override

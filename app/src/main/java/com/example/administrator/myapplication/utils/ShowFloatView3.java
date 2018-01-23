@@ -15,10 +15,10 @@ import com.example.administrator.myapplication.R;
  * Created by wangtao on 2018/1/16.
  */
 
-public class ShowFloatView2 {
+public class ShowFloatView3 {
     private final Context context;
 
-    public ShowFloatView2(Context c) {
+    public ShowFloatView3(Context c) {
         this.context = c;
         windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
@@ -52,7 +52,7 @@ public class ShowFloatView2 {
     }
 
     private WindowManager.LayoutParams params;
-    private static final int startY = 100, subWidth =90, subHeight = 50;
+    private static final int startY = 160, subWidth =90, subHeight = 80;
 
 
     public void showFloatview() {
@@ -60,9 +60,9 @@ public class ShowFloatView2 {
             return;
         }
 
-        view = LayoutInflater.from(context).inflate(R.layout.view_wechat_pay2, null);
+        view = LayoutInflater.from(context).inflate(R.layout.view_wechat_pay3, null);
         TextView tvValue = (TextView) view.findViewById(R.id.tv_value_pay1);
-        tvValue.setText("20.00");
+        tvValue.setText("30.00");
         windowManager.addView(view, params);
     }
 

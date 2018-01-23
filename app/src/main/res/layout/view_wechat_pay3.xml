@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAFAFA"
+    android:background="#FFFF"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -14,7 +14,7 @@
             android:id="@+id/iv_rmb_pay1"
             android:layout_width="15dp"
             android:layout_height="28dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/icon_rmb" />
 
         <TextView
@@ -22,11 +22,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/iv_rmb_pay1"
-            android:paddingLeft="0dp"
+            android:paddingLeft="4dp"
             android:text="15.00"
             android:textColor="@color/text_color"
-            android:textSize="32sp"
-            android:textStyle="normal" />
+            android:textSize="34sp"
+            android:textStyle="bold" />
     </RelativeLayout>
 
 
