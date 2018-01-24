@@ -25,7 +25,7 @@ public class ShowFloatView2 {
         params = new WindowManager.LayoutParams();
         // 类型
         params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-//        params.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
+//        params.type = WindowManager.LayoutParams.TYPE_TOAST ;
         // 设置flag
 //        int flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 //        int flags = FLAG_NOT_FOCUSABLE | FLAG_NOT_TOUCH_MODAL;

@@ -52,13 +52,13 @@ public class MyService extends AccessibilityService {
                 currintPage = 1;
             }
             delayHandler.sendEmptyMessageDelayed(2, 280);
-            delayHandler.sendEmptyMessageDelayed(3, 280);
+            delayHandler.sendEmptyMessageDelayed(3, 480);
         }
-        if (className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI")) {
+        if (className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l")) {
             if (showFloatView2 == null) {
                 delayHandlerShow.sendEmptyMessageDelayed(2, 300);
-                delayHandler.sendEmptyMessageDelayed(1, 280);
-                delayHandler.sendEmptyMessageDelayed(3, 280);
+                delayHandler.sendEmptyMessageDelayed(1, 480);
+                delayHandler.sendEmptyMessageDelayed(3, 480);
             }
         }
         if (className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceResultNewUI")) {
@@ -67,7 +67,7 @@ public class MyService extends AccessibilityService {
                 showFloatView3.showFloatview();
                 currintPage = 3;
                 delayHandler.sendEmptyMessageDelayed(2, 280);
-                delayHandler.sendEmptyMessageDelayed(1, 280);
+                delayHandler.sendEmptyMessageDelayed(1, 480);
             }
         }
 

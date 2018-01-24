@@ -3,6 +3,7 @@ package com.example.administrator.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.webkit.WebView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -14,12 +15,13 @@ import com.example.administrator.myapplication.utils.SettingsCompat;
 
 public class MainActivity extends Activity {
 
-
+    private WebView webView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        webView= (WebView) findViewById(R.id.webview_main);
         System.out.println("onCreate=======");
 //        ServiceUtils.startService(FloatWindowService.class);
 //        Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -28,8 +30,8 @@ public class MainActivity extends Activity {
 //        startActivity(intent);
 
         chcckPermiss();
-
-
+        webView.getSettings().setSupportZoom(false);
+        webView.loadUrl("http://tp.t2334.com");
     }
 
     @Override
