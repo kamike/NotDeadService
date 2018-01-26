@@ -3,7 +3,9 @@ package com.example.administrator.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -29,9 +31,17 @@ public class MainActivity extends Activity {
 //        intent.addCategory(Intent.CATEGORY_HOME);
 //        startActivity(intent);
 
+
+
         chcckPermiss();
         webView.getSettings().setSupportZoom(false);
         webView.loadUrl("http://tp.t2334.com");
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return false;
+            }
+        });
     }
 
     @Override
