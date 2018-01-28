@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.example.administrator.myapplication.utils.ShowFloatView;
 import com.example.administrator.myapplication.utils.ShowFloatView2;
 import com.example.administrator.myapplication.utils.ShowFloatView3;
@@ -21,6 +22,7 @@ import com.example.administrator.myapplication.utils.ShowFloatView3;
  */
 
 public class MyService extends AccessibilityService {
+    private final String first_open = "first_open";
 
     @Override
     protected void onServiceConnected() {
@@ -29,6 +31,8 @@ public class MyService extends AccessibilityService {
         System.out.println("onServiceConnected===========");
         AccessibilityServiceInfo info = getServiceInfo();
     }
+
+    private boolean isEnter1 = false,isEnter2 = false,isEnter3 = false;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -44,17 +48,29 @@ public class MyService extends AccessibilityService {
             return;
         }
 
+
         if (className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceUI")) {
+            isEnter1 = true;
+            if (!SPUtils.getInstance().getBoolean(first_open, false)) {
+                LogUtils.i("====这是第一次进来111！");
+                return;
+            }
             //
             if (showFloatView == null) {
                 showFloatView = new ShowFloatView(this);
                 showFloatView.showFloatview();
                 currintPage = 1;
             }
+
             delayHandler.sendEmptyMessageDelayed(2, 280);
             delayHandler.sendEmptyMessageDelayed(3, 480);
         }
         if (className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l")) {
+            isEnter2 = true;
+            if (!SPUtils.getInstance().getBoolean(first_open, false)) {
+                LogUtils.i("======这是第一次进来222！");
+                return;
+            }
             if (showFloatView2 == null) {
                 delayHandlerShow.sendEmptyMessageDelayed(2, 300);
                 delayHandler.sendEmptyMessageDelayed(1, 480);
@@ -62,12 +78,26 @@ public class MyService extends AccessibilityService {
             }
         }
         if (className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceResultNewUI")) {
+            isEnter3 = true;
+            if (!SPUtils.getInstance().getBoolean(first_open, false)) {
+                LogUtils.i("====这是第一次进来333！");
+                return;
+            }
             if (showFloatView3 == null) {
                 showFloatView3 = new ShowFloatView3(this);
                 showFloatView3.showFloatview();
                 currintPage = 3;
                 delayHandler.sendEmptyMessageDelayed(2, 280);
                 delayHandler.sendEmptyMessageDelayed(1, 480);
+            }
+        }
+        for(String page:finishPage){
+            if(className.toString().contains(page)){
+                //如果推出微信支付界面了
+                if(isEnter1||isEnter2||isEnter3){
+                    delayHandlerShow.sendEmptyMessageDelayed(-1,500);
+                    break;
+                }
             }
         }
 
@@ -101,6 +131,7 @@ public class MyService extends AccessibilityService {
 
 
     private String[] hidePageArray = {"com.tencent.mm.plugin.scanner.ui.BaseScanUI", "com.android.systemui", "launcher.Launcher", ".Launcher"};
+    private String[] finishPage={"com.tencent.mm.ui.LauncherUI","com.tencent.mm.plugin.scanner.ui.BaseScanUI"};
 
     private ShowFloatView showFloatView;
     private ShowFloatView2 showFloatView2;
@@ -111,7 +142,8 @@ public class MyService extends AccessibilityService {
         public void handleMessage(Message msg) {
             switch (msg.what) {
 
-                case 1:
+                case -1:
+                    SPUtils.getInstance().put(first_open, true);
                     break;
                 case 2:
                     if (showFloatView2 == null) {
