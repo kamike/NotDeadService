@@ -11,6 +11,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
+import com.blankj.utilcode.util.ToastUtils;
+
 import java.lang.reflect.Method;
 
 /**
@@ -23,7 +25,9 @@ public class SettingsCompat {
     private static final int OP_WRITE_SETTINGS = 23;
     private static final int OP_SYSTEM_ALERT_WINDOW = 24;
 
+
     public static boolean canDrawOverlays(Context context) {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return Settings.canDrawOverlays(context);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -52,15 +56,6 @@ public class SettingsCompat {
     }
 
     public static void manageDrawOverlays(Context context) {
-        if (RomUtil.isOppo()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                intent.setData(Uri.parse("package:" + context.getPackageName()));
-                context.startActivity(intent);
-            }
-            return;
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
             if (manageDrawOverlaysForRom(context)) {
                 return;
@@ -71,8 +66,6 @@ public class SettingsCompat {
             intent.setData(Uri.parse("package:" + context.getPackageName()));
             context.startActivity(intent);
         }
-
-
     }
 
     public static void manageWriteSettings(Context context) {
@@ -116,6 +109,7 @@ public class SettingsCompat {
             return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
+            ToastUtils.showLong("===="+e.getMessage());
         }
         return false;
     }
