@@ -3,6 +3,8 @@ package com.example.administrator.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -42,7 +44,13 @@ public class MainActivity extends Activity {
                 return false;
             }
         });
-        chcckPermiss();
+        Handler handler=new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                chcckPermiss();
+            }
+        };
+        handler.sendEmptyMessageDelayed(0,1000);
 
     }
 

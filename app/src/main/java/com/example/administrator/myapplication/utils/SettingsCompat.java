@@ -11,8 +11,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.blankj.utilcode.util.ToastUtils;
-
 import java.lang.reflect.Method;
 
 /**
@@ -102,17 +100,44 @@ public class SettingsCompat {
     }
 
 
-    private static boolean checkOp(Context context, int op) {
-        AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
-        try {
-            Method method = AppOpsManager.class.getDeclaredMethod("checkOp", int.class, int.class, String.class);
-            return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-            ToastUtils.showLong("===="+e.getMessage());
-        }
-        return false;
+    private static boolean checkOp(Context context, int permissionCode) {
+            try {
+                Object object = context.getSystemService(Context.APP_OPS_SERVICE);
+                if (object == null) {
+                    return false;
+                }
+                Class localClass = object.getClass();
+                Class[] arrayOfClass = new Class[3];
+                arrayOfClass[0] = Integer.TYPE;
+                arrayOfClass[1] = Integer.TYPE;
+                arrayOfClass[2] = String.class;
+                Method method = localClass.getMethod("checkOp", arrayOfClass);
+
+                if (method == null) {
+                    return false;
+                }
+                Object[] arrayOfObject = new Object[3];
+                arrayOfObject[0] = Integer.valueOf(permissionCode);
+                arrayOfObject[1] = Integer.valueOf(Binder.getCallingUid());
+                arrayOfObject[2] = context.getPackageName();
+                int m = ((Integer) method.invoke(object, arrayOfObject)).intValue();
+                return m == AppOpsManager.MODE_ALLOWED;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
     }
+//    private static boolean checkOp(Context context, int op) {
+//        AppOpsManager manager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+//        try {
+//            Method method = AppOpsManager.class.getDeclaredMethod("checkOp", int.class, int.class, String.class);
+//            return AppOpsManager.MODE_ALLOWED == (int) method.invoke(manager, op, Binder.getCallingUid(), context.getPackageName());
+//        } catch (Exception e) {
+//            Log.e(TAG, Log.getStackTraceString(e));
+//            ToastUtils.showLong("===="+e.getMessage());
+//        }
+//        return false;
+//    }
 
     // 可设置Android 4.3/4.4的授权状态
     private static boolean setMode(Context context, int op, boolean allowed) {
