@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'mldp'
+            keyPassword '02640264'
+            storeFile file('G:/treatWoSign/treatwo.keystore')
+            storePassword '02640264a'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
