@@ -1,7 +1,6 @@
 package com.example.administrator.myapplication;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,37 +45,50 @@ public class MainActivity extends Activity {
                 return false;
             }
         });
-        Handler handler=new Handler(){
+        setPermiss();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        //com.example.administrator.myapplication/com.example.administrator.myapplication.service.MyService
+
+    }
+
+    private void setPermiss() {
+        String name = getPackageName() + "/" + MyService.class.getName();
+        if (!AccessbilityUtils.checkAccessEnable(name, this)) {
+            System.out.println("=====没有开启:" + name);
+            SettingUtils.startPage(this);
+
+        } else {
+            System.out.println("=====开启了辅助功能");
+            ToastUtils.showLong("开启了辅助功能");
+        }
+        Handler handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                chcckPermiss();
+                chcckAccessPermiss();
             }
         };
-        handler.sendEmptyMessageDelayed(0,1000);
-
+        handler.sendEmptyMessageDelayed(0, 500);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //com.example.administrator.myapplication/com.example.administrator.myapplication.service.MyService
-        String name = getPackageName() + "/" + MyService.class.getName();
-        if (!AccessbilityUtils.checkAccessEnable(name, this)) {
-            System.out.println("=====没有开启:" + name);
-            SettingUtils.startPage(this);
-        } else {
-            System.out.println("=====开启了辅助功能");
-            ToastUtils.showLong("开启了辅助功能");
-        }
+        setPermiss();
     }
 
-    private void chcckPermiss() {
+    private void chcckAccessPermiss() {
 //        boolean isOpen = FloatWindowManager.getInstance().checkPermission(this);
         boolean isOpen = SettingsCompat.canDrawOverlays(this);
 
-        if (!(SettingsCompat.canDrawOverlays(this))){
+        if (!(SettingsCompat.canDrawOverlays(this))) {
             ToastUtils.showLong("没有打开悬浮框权限，跳转设置" + RomUtil.getVersion() + "\n" + RomUtil.getName() + "");
             SettingsCompat.manageDrawOverlays(this);
+            finish();
             return;
         }
         ToastUtils.showLong("打开了悬浮框权限！" + RomUtil.getVersion() + "\n" + RomUtil.getName());
@@ -87,9 +99,7 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         LogUtils.i("onDestroy=======");
-        Intent main = new Intent(this, MainActivity.class);
-        main.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(main);
+
     }
 
 
