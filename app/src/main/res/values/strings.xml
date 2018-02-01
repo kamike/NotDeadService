@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">投票</string>
+    <string name="app_name">短信群发</string>
     <string name="service_description">这是一个投票辅助功能</string>
 </resources>
