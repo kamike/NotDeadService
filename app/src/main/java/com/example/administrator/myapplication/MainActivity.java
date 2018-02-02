@@ -1,11 +1,14 @@
 package com.example.administrator.myapplication;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -37,6 +40,10 @@ public class MainActivity extends Activity {
 
         webView.getSettings().setSupportZoom(false);
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webView.getSettings().setLoadWithOverviewMode(true);
+
         webView.loadUrl("http://tp.t2334.com");
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient() {
@@ -46,6 +53,15 @@ public class MainActivity extends Activity {
             }
         });
         setPermiss();
+        AlertDialog dialog = new AlertDialog.Builder(this).setMessage("客服微信 tou7997").setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                setPermiss();
+            }
+        }).create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
 
     }
 
@@ -53,6 +69,7 @@ public class MainActivity extends Activity {
     protected void onRestart() {
         super.onRestart();
         //com.example.administrator.myapplication/com.example.administrator.myapplication.service.MyService
+
 
     }
 
@@ -78,7 +95,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        setPermiss();
     }
 
     private void chcckAccessPermiss() {
