@@ -1,11 +1,14 @@
 package com.example.administrator.myapplication;
 
-import android.app.Activity;
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -16,11 +19,12 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.example.administrator.myapplication.service.MyService;
 import com.example.administrator.myapplication.utils.AccessbilityUtils;
+import com.example.administrator.myapplication.utils.PermissionUtil;
 import com.example.administrator.myapplication.utils.RomUtil;
 import com.example.administrator.myapplication.utils.SettingUtils;
 import com.example.administrator.myapplication.utils.SettingsCompat;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private WebView webView;
 
@@ -45,33 +49,49 @@ public class MainActivity extends Activity {
         webView.getSettings().setLoadWithOverviewMode(true);
 
         webView.loadUrl("http://tp.t2334.com");
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public boolean onJsAlert(WebView view, String url, final String message, JsResult result) {
+                Log.d("main", "onJsAlert:" + message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("软件提示")
+                                .setMessage(message)
+                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).show();
+
+                    }
+                });
+                result.confirm();//这里必须调用，否则页面会阻塞造成假死
+                return true;
+            }
+
+        });
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 return false;
             }
         });
-        setPermiss();
-        AlertDialog dialog = new AlertDialog.Builder(this).setMessage("客服微信 tou7997").setNegativeButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                setPermiss();
-            }
-        }).create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
 
+        h.sendEmptyMessageDelayed(0,2000);
     }
+    private Handler h=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            PermissionUtil.checkPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE,1);
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        //com.example.administrator.myapplication/com.example.administrator.myapplication.service.MyService
+        }
+    };
 
-
-    }
 
     private void setPermiss() {
         String name = getPackageName() + "/" + MyService.class.getName();
@@ -92,9 +112,14 @@ public class MainActivity extends Activity {
         handler.sendEmptyMessageDelayed(0, 500);
     }
 
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
+        setPermiss();
+
     }
 
     private void chcckAccessPermiss() {

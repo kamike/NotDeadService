@@ -14,6 +14,5 @@ public class AppClass extends Application {
     public void onCreate() {
         super.onCreate();
         Utils.init(this);
-        LogCrashHandler.getInstance().init(this);
     }
 }

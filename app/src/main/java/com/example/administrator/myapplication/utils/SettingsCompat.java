@@ -159,12 +159,17 @@ public class SettingsCompat {
     }
 
     private static boolean startSafely(Context context, Intent intent) {
-        if (context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            return true;
-        } else {
-            Log.e(TAG, "Intent is not available! " + intent);
+        try {
+            if (context.getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() > 0) {
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                return true;
+            } else {
+                Log.e(TAG, "Intent is not available! " + intent);
+                return false;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
             return false;
         }
     }

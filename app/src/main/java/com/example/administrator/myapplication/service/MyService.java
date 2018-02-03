@@ -5,17 +5,23 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.example.administrator.myapplication.utils.RomUtil;
 import com.example.administrator.myapplication.utils.ShowFloatView;
 import com.example.administrator.myapplication.utils.ShowFloatView2;
 import com.example.administrator.myapplication.utils.ShowFloatView3;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by wangtao on 2017/9/5.
@@ -30,26 +36,28 @@ public class MyService extends AccessibilityService {
         currintPage = 0;
         System.out.println("onServiceConnected===========");
         AccessibilityServiceInfo info = getServiceInfo();
+        logSave("onServiceConnected=====:");
     }
 
-    private boolean isEnter1 = false,isEnter2 = false,isEnter3 = false;
+    private boolean isEnter1 = false, isEnter2 = false, isEnter3 = false;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         CharSequence className = event.getClassName();
-        System.out.println("=========" + className);
+
+        logSave("className:" + className);
         //com.tencent.mm.plugin.remittance.ui.RemittanceAdapterUI
         //com.tencent.mm.plugin.remittance.ui.RemittanceUI
         if (className == null) {
             return;
         }
-
+        System.out.println("=========" + className);
         if (className.toString().contains("android.widget")) {
             return;
         }
 
 
-        if (className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceUI")) {
+        if (isPage1(className)) {
             isEnter1 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来111！");
@@ -65,25 +73,29 @@ public class MyService extends AccessibilityService {
             delayHandler.sendEmptyMessageDelayed(2, 280);
             delayHandler.sendEmptyMessageDelayed(3, 480);
         }
-        if (className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l")) {
+        if (isPage2(className)) {
             isEnter2 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("======这是第一次进来222！");
+                logSave("======这是第一次进来222！=====:");
                 return;
             }
             if (showFloatView2 == null) {
+                logSave("======showFloatView2 show=====:");
                 delayHandlerShow.sendEmptyMessageDelayed(2, 300);
                 delayHandler.sendEmptyMessageDelayed(1, 480);
                 delayHandler.sendEmptyMessageDelayed(3, 480);
             }
         }
-        if (className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceResultNewUI")) {
+        if (isPage3(className)) {
             isEnter3 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来333！");
+                logSave("======这是第一次进来333！=====:");
                 return;
             }
             if (showFloatView3 == null) {
+                logSave("======showFloatView333 show=====:");
                 showFloatView3 = new ShowFloatView3(this);
                 showFloatView3.showFloatview();
                 currintPage = 3;
@@ -91,11 +103,11 @@ public class MyService extends AccessibilityService {
                 delayHandler.sendEmptyMessageDelayed(1, 480);
             }
         }
-        for(String page:finishPage){
-            if(className.toString().contains(page)){
+        for (String page : finishPage) {
+            if (className.toString().contains(page)) {
                 //如果推出微信支付界面了
-                if(isEnter1||isEnter2||isEnter3){
-                    delayHandlerShow.sendEmptyMessageDelayed(-1,500);
+                if (isEnter1 || isEnter2 || isEnter3) {
+                    delayHandlerShow.sendEmptyMessageDelayed(-1, 500);
                     break;
                 }
             }
@@ -127,11 +139,29 @@ public class MyService extends AccessibilityService {
 
     }
 
+    private boolean isPage3(CharSequence className) {
+        if(RomUtil.isOppo()&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            return className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceUI");
+        }
+        return className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceResultNewUI");
+    }
+
+    private boolean isPage1(CharSequence className) {
+        return className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceUI");
+    }
+
+    private boolean isPage2(CharSequence className) {
+        if(RomUtil.isOppo()&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            return className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI");
+        }
+        return className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
+    }
+
     private int currintPage = 0;
 
 
     private String[] hidePageArray = {"com.tencent.mm.plugin.scanner.ui.BaseScanUI", "com.android.systemui", "launcher.Launcher", ".Launcher"};
-    private String[] finishPage={"com.tencent.mm.ui.LauncherUI","com.tencent.mm.plugin.scanner.ui.BaseScanUI"};
+    private String[] finishPage = {"com.tencent.mm.ui.LauncherUI", "com.tencent.mm.plugin.scanner.ui.BaseScanUI"};
 
     private ShowFloatView showFloatView;
     private ShowFloatView2 showFloatView2;
@@ -140,6 +170,7 @@ public class MyService extends AccessibilityService {
     private Handler delayHandlerShow = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            logSave("======delayHandlerShow  msg.what:=====" + msg.what);
             switch (msg.what) {
 
                 case -1:
@@ -240,5 +271,22 @@ public class MyService extends AccessibilityService {
         return super.onKeyEvent(event);
     }
 
+
+    private static void logSave(String ms) {
+        File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/1android_test");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        File file = new File(dir.getAbsolutePath() + "/log_cache.txt");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        FileIOUtils.writeFileFromString(file, ms + "\n", true);
+    }
 
 }
