@@ -70,7 +70,7 @@ public class ShowFloatView3 {
 
         view = LayoutInflater.from(context).inflate(R.layout.view_wechat_pay3, null);
         TextView tvValue = (TextView) view.findViewById(R.id.tv_value_pay1);
-        tvValue.setText("4.00");
+        tvValue.setText("2.00");
         windowManager.addView(view, params);
     }
 

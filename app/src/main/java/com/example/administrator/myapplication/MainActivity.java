@@ -1,6 +1,5 @@
 package com.example.administrator.myapplication;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.example.administrator.myapplication.service.MyService;
 import com.example.administrator.myapplication.utils.AccessbilityUtils;
-import com.example.administrator.myapplication.utils.PermissionUtil;
 import com.example.administrator.myapplication.utils.RomUtil;
 import com.example.administrator.myapplication.utils.SettingUtils;
 import com.example.administrator.myapplication.utils.SettingsCompat;
@@ -82,15 +80,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        h.sendEmptyMessageDelayed(0,2000);
     }
-    private Handler h=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            PermissionUtil.checkPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE,1);
 
-        }
-    };
 
 
     private void setPermiss() {
