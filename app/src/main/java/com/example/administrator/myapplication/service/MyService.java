@@ -61,6 +61,7 @@ public class MyService extends AccessibilityService {
             isEnter1 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来111！");
+                delayHandlerShow.sendEmptyMessageDelayed(-1, 0);
                 return;
             }
             //
@@ -103,15 +104,6 @@ public class MyService extends AccessibilityService {
                 delayHandler.sendEmptyMessageDelayed(1, 480);
             }
         }
-        for (String page : finishPage) {
-            if (className.toString().contains(page)) {
-                //如果推出微信支付界面了
-                if (isEnter1 || isEnter2 || isEnter3) {
-                    delayHandlerShow.sendEmptyMessageDelayed(-1, 500);
-                    break;
-                }
-            }
-        }
 
 
         if (showFloatView == null && showFloatView2 == null) {
@@ -139,10 +131,11 @@ public class MyService extends AccessibilityService {
 
     }
 
+
     private boolean isPage3(CharSequence className) {
-        if(RomUtil.isOppo()&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            return className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceUI");
-        }
+//        if(RomUtil.isOppo()&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+//            return className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.m");
+//        }
         return className.toString().contains("com.tencent.mm.plugin.remittance.ui.RemittanceResultNewUI");
     }
 
@@ -151,7 +144,7 @@ public class MyService extends AccessibilityService {
     }
 
     private boolean isPage2(CharSequence className) {
-        if(RomUtil.isOppo()&&Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (RomUtil.isOppo() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI");
         }
         return className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
@@ -180,6 +173,7 @@ public class MyService extends AccessibilityService {
                     if (showFloatView2 == null) {
                         showFloatView2 = new ShowFloatView2(MyService.this);
                         showFloatView2.showFloatview();
+                        System.out.print("===show 22222");
                     }
                     currintPage = 2;
                     break;
@@ -207,6 +201,7 @@ public class MyService extends AccessibilityService {
                     break;
                 case 2:
                     if (showFloatView2 == null) {
+                        System.out.println("====22222===null");
                         return;
                     }
                     showFloatView2.removeView();
@@ -273,6 +268,7 @@ public class MyService extends AccessibilityService {
 
 
     private static void logSave(String ms) {
+        System.out.println("========="+ms);
         File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/1android_test");
         if (!dir.exists()) {
             dir.mkdirs();

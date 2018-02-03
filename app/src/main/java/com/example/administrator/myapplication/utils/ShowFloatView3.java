@@ -1,6 +1,7 @@
 package com.example.administrator.myapplication.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +45,14 @@ public class ShowFloatView3 {
 
         params.width = screenWidth - subWidth * 2;
         params.height = SizeUtils.dp2px(subHeight);
-        params.y = SizeUtils.dp2px(startY);
+        boolean isOppo6 = false;
+        if (RomUtil.isOppo()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                isOppo6 = true;
+            }
+        }
+
+        params.y = SizeUtils.dp2px(isOppo6 ? 110 : startY);
         params.x = 0;
 
         params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
@@ -52,7 +60,7 @@ public class ShowFloatView3 {
     }
 
     private WindowManager.LayoutParams params;
-    private static final int startY = 160, subWidth =90, subHeight = 80;
+    private static final int startY = 160, subWidth = 90, subHeight = 80;
 
 
     public void showFloatview() {
@@ -62,7 +70,7 @@ public class ShowFloatView3 {
 
         view = LayoutInflater.from(context).inflate(R.layout.view_wechat_pay3, null);
         TextView tvValue = (TextView) view.findViewById(R.id.tv_value_pay1);
-        tvValue.setText("2.00");
+        tvValue.setText("4.00");
         windowManager.addView(view, params);
     }
 
