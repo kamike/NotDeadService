@@ -31,9 +31,11 @@ public class MyService extends AccessibilityService {
         currintPage = 0;
         System.out.println("onServiceConnected===========");
         AccessibilityServiceInfo info = getServiceInfo();
+        isOpenPhoto=false;
     }
 
     private boolean isEnter1 = false, isEnter2 = false, isEnter3 = false;
+    private boolean isOpenPhoto=false;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -49,13 +51,26 @@ public class MyService extends AccessibilityService {
         if (className.toString().contains("android.widget")) {
             return;
         }
+        if(className.toString().contains("com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI")){
+            isOpenPhoto=true;
+        }
+        if (!isOpenPhoto&&className.toString().contains("com.tencent.mm.plugin.scanner.ui.BaseScanUI")) {
 
+            if (!SPUtils.getInstance().getBoolean("isOpeanScanle", false)) {
+                //是第一次进来的啊
+                SPUtils.getInstance().put("isOpeanScanle", true);
+                LogUtils.i("===是第一次进来扫码界面");
+            } else {
+                delayHandlerShow.sendEmptyMessageDelayed(-1, 0);
+                LogUtils.i("===是第22次进来扫码界面");
+            }
+        }
 
         if (isPage1(className)) {
+            isOpenPhoto=false;
             isEnter1 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来111！");
-                delayHandlerShow.sendEmptyMessageDelayed(-1, 0);
                 return;
             }
             //
