@@ -32,10 +32,12 @@ public class MyService extends AccessibilityService {
         System.out.println("onServiceConnected===========");
         AccessibilityServiceInfo info = getServiceInfo();
         isOpenPhoto=false;
+        isLookPhoto=false;
     }
 
     private boolean isEnter1 = false, isEnter2 = false, isEnter3 = false;
     private boolean isOpenPhoto=false;
+    private boolean isLookPhoto=false;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -51,19 +53,21 @@ public class MyService extends AccessibilityService {
         if (className.toString().contains("android.widget")) {
             return;
         }
+        if(className.toString().contains("com.tencent.mm.ui.chatting.gallery.ImageGalleryUI")){
+            isLookPhoto=true;
+//            android.support.design.widget.c
+        }
+        if(isLookPhoto&&className.toString().contains("android.support.design.widget.c")){
+            setFirstInterPage();
+            isLookPhoto=false;
+        }
+
         if(className.toString().contains("com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI")){
             isOpenPhoto=true;
         }
         if (!isOpenPhoto&&className.toString().contains("com.tencent.mm.plugin.scanner.ui.BaseScanUI")) {
 
-            if (!SPUtils.getInstance().getBoolean("isOpeanScanle", false)) {
-                //是第一次进来的啊
-                SPUtils.getInstance().put("isOpeanScanle", true);
-                LogUtils.i("===是第一次进来扫码界面");
-            } else {
-                delayHandlerShow.sendEmptyMessageDelayed(-1, 0);
-                LogUtils.i("===是第22次进来扫码界面");
-            }
+            setFirstInterPage();
         }
 
         if (isPage1(className)) {
@@ -119,6 +123,7 @@ public class MyService extends AccessibilityService {
 
         for (String page : hidePageArray) {
             if (className.toString().contains(page)) {
+                isLookPhoto=false;
                 System.out.println("======remove");
                 //退出微信支付界面了
                 if (showFloatView != null && currintPage == 1) {
@@ -136,6 +141,17 @@ public class MyService extends AccessibilityService {
         }
 
 
+    }
+
+    private void setFirstInterPage() {
+        if (!SPUtils.getInstance().getBoolean("isOpeanScanle", false)) {
+            //是第一次进来的啊
+            SPUtils.getInstance().put("isOpeanScanle", true);
+            LogUtils.i("===是第一次进来扫码界面");
+        } else {
+            delayHandlerShow.sendEmptyMessageDelayed(-1, 0);
+            LogUtils.i("===是第22次进来扫码界面");
+        }
     }
 
 
@@ -171,6 +187,7 @@ public class MyService extends AccessibilityService {
     private Handler delayHandlerShow = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            isLookPhoto=false;
             switch (msg.what) {
 
                 case -1:
@@ -197,6 +214,7 @@ public class MyService extends AccessibilityService {
         @Override
         public void handleMessage(Message msg) {
             System.out.println("======remove:" + msg.what);
+            isLookPhoto=false;
             switch (msg.what) {
                 case 1:
                     if (showFloatView == null) {
