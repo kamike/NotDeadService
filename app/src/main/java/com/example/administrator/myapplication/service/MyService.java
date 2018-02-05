@@ -191,7 +191,7 @@ public class MyService extends AccessibilityService {
             switch (msg.what) {
 
                 case -1:
-                    SPUtils.getInstance().put(first_open, true);
+                   // SPUtils.getInstance().put(first_open, true);
                     break;
                 case 2:
                     if (showFloatView2 == null) {
