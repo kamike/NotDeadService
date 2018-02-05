@@ -75,7 +75,7 @@ public class MyService extends AccessibilityService {
             isEnter1 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来111！");
-                return;
+//                return;
             }
             //
             if (showFloatView == null) {
@@ -93,7 +93,7 @@ public class MyService extends AccessibilityService {
             isEnter2 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("======这是第一次进来222！");
-                return;
+//                return;
             }
             if (showFloatView2 == null) {
                 delayHandlerShow.sendEmptyMessageDelayed(2, 200);
@@ -105,7 +105,7 @@ public class MyService extends AccessibilityService {
             isEnter3 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来333！");
-                return;
+//                return;
             }
             if (showFloatView3 == null) {
                 showFloatView3 = new ShowFloatView3(this);
@@ -171,7 +171,9 @@ public class MyService extends AccessibilityService {
             //com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI
             return className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI");
         }
-        return className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
+//        return className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
+        return className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI")
+                ||className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
     }
 
     private int currintPage = 0;
