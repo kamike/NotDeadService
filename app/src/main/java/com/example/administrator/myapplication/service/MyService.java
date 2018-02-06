@@ -83,7 +83,6 @@ public class MyService extends AccessibilityService {
                 showFloatView.showFloatview();
                 currintPage = 1;
             }
-
             delayHandler.sendEmptyMessageDelayed(2, 280);
             delayHandler.sendEmptyMessageDelayed(3, 480);
         }
@@ -97,7 +96,7 @@ public class MyService extends AccessibilityService {
             }
             if (showFloatView2 == null) {
                 delayHandlerShow.sendEmptyMessageDelayed(2, 200);
-                delayHandler.sendEmptyMessageDelayed(1, 350);
+                delayHandler.sendEmptyMessageDelayed(1, 500);
                 delayHandler.sendEmptyMessageDelayed(3, 480);
             }
         }
@@ -172,8 +171,8 @@ public class MyService extends AccessibilityService {
             return className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI");
         }
 //        return className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
-        return className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI")
-                ||className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
+        return className.toString().contains("com.tencent.mm.plugin.wallet.pay.ui.WalletPayUI");
+//                ||className.toString().contains("com.tencent.mm.plugin.wallet_core.ui.l");
     }
 
     private int currintPage = 0;
