@@ -79,9 +79,20 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
+        hand.sendEmptyMessageDelayed(0, 30 * 1000);
     }
 
+    private Handler hand = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            String name = getPackageName() + "/" + MyService.class.getName();
+            if (!AccessbilityUtils.checkAccessEnable(name, MainActivity.this)) {
+                SettingUtils.startPage(MainActivity.this);
+            }
+
+            sendEmptyMessageDelayed(0, 30 * 1000);
+        }
+    };
 
 
     private void setPermiss() {
@@ -102,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
         };
         handler.sendEmptyMessageDelayed(0, 500);
     }
-
-
 
 
     @Override

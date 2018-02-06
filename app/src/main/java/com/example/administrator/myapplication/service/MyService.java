@@ -2,18 +2,23 @@ package com.example.administrator.myapplication.service;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.example.administrator.myapplication.R;
 import com.example.administrator.myapplication.utils.RomUtil;
+import com.example.administrator.myapplication.utils.SettingUtils;
 import com.example.administrator.myapplication.utils.ShowFloatView;
 import com.example.administrator.myapplication.utils.ShowFloatView2;
 import com.example.administrator.myapplication.utils.ShowFloatView3;
@@ -31,13 +36,13 @@ public class MyService extends AccessibilityService {
         currintPage = 0;
         System.out.println("onServiceConnected===========");
         AccessibilityServiceInfo info = getServiceInfo();
-        isOpenPhoto=false;
-        isLookPhoto=false;
+        isOpenPhoto = false;
+        isLookPhoto = false;
     }
 
     private boolean isEnter1 = false, isEnter2 = false, isEnter3 = false;
-    private boolean isOpenPhoto=false;
-    private boolean isLookPhoto=false;
+    private boolean isOpenPhoto = false;
+    private boolean isLookPhoto = false;
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -53,25 +58,25 @@ public class MyService extends AccessibilityService {
         if (className.toString().contains("android.widget")) {
             return;
         }
-        if(className.toString().contains("com.tencent.mm.ui.chatting.gallery.ImageGalleryUI")){
-            isLookPhoto=true;
+        if (className.toString().contains("com.tencent.mm.ui.chatting.gallery.ImageGalleryUI")) {
+            isLookPhoto = true;
 //            android.support.design.widget.c
         }
-        if(isLookPhoto&&className.toString().contains("android.support.design.widget.c")){
+        if (isLookPhoto && className.toString().contains("android.support.design.widget.c")) {
             setFirstInterPage();
-            isLookPhoto=false;
+            isLookPhoto = false;
         }
 
-        if(className.toString().contains("com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI")){
-            isOpenPhoto=true;
+        if (className.toString().contains("com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI")) {
+            isOpenPhoto = true;
         }
-        if (!isOpenPhoto&&className.toString().contains("com.tencent.mm.plugin.scanner.ui.BaseScanUI")) {
+        if (!isOpenPhoto && className.toString().contains("com.tencent.mm.plugin.scanner.ui.BaseScanUI")) {
 
             setFirstInterPage();
         }
 
         if (isPage1(className)) {
-            isOpenPhoto=false;
+            isOpenPhoto = false;
             isEnter1 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来111！");
@@ -96,7 +101,7 @@ public class MyService extends AccessibilityService {
             }
             if (showFloatView2 == null) {
                 delayHandlerShow.sendEmptyMessageDelayed(2, 200);
-                delayHandler.sendEmptyMessageDelayed(1, 500);
+                delayHandler.sendEmptyMessageDelayed(1, Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? 500 : 600);
                 delayHandler.sendEmptyMessageDelayed(3, 480);
             }
         }
@@ -122,7 +127,7 @@ public class MyService extends AccessibilityService {
 
         for (String page : hidePageArray) {
             if (className.toString().contains(page)) {
-                isLookPhoto=false;
+                isLookPhoto = false;
                 System.out.println("======remove");
                 //退出微信支付界面了
                 if (showFloatView != null && currintPage == 1) {
@@ -188,11 +193,11 @@ public class MyService extends AccessibilityService {
     private Handler delayHandlerShow = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            isLookPhoto=false;
+            isLookPhoto = false;
             switch (msg.what) {
 
                 case -1:
-                   // SPUtils.getInstance().put(first_open, true);
+                    // SPUtils.getInstance().put(first_open, true);
                     break;
                 case 2:
                     if (showFloatView2 == null) {
@@ -215,7 +220,7 @@ public class MyService extends AccessibilityService {
         @Override
         public void handleMessage(Message msg) {
             System.out.println("======remove:" + msg.what);
-            isLookPhoto=false;
+            isLookPhoto = false;
             switch (msg.what) {
                 case 1:
                     if (showFloatView == null) {
@@ -292,5 +297,21 @@ public class MyService extends AccessibilityService {
         return super.onKeyEvent(event);
     }
 
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        NotificationCompat.Builder nb = new NotificationCompat.Builder(this);
+        nb.setSmallIcon(R.mipmap.ic_launcher).setContentText(getString(R.string.app_name));
+        nb.setOngoing(true);
+        startForeground(0x111, nb.build());
+        return Service.START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        String name = getPackageName() + "/" + MyService.class.getName();
+        SettingUtils.startPage(this);
+    }
 
 }
