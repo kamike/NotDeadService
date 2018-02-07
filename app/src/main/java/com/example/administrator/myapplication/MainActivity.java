@@ -15,7 +15,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ServiceUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.example.administrator.myapplication.service.FloatWindowService;
 import com.example.administrator.myapplication.service.MyService;
 import com.example.administrator.myapplication.utils.AccessbilityUtils;
 import com.example.administrator.myapplication.utils.RomUtil;
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         webView = (WebView) findViewById(R.id.webview_main);
         System.out.println("onCreate=======");
-//        ServiceUtils.startService(FloatWindowService.class);
+        ServiceUtils.startService(FloatWindowService.class);
 //        Intent intent = new Intent(Intent.ACTION_MAIN);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addCategory(Intent.CATEGORY_HOME);
@@ -79,20 +81,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        hand.sendEmptyMessageDelayed(0, 30 * 1000);
     }
 
-    private Handler hand = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            String name = getPackageName() + "/" + MyService.class.getName();
-            if (!AccessbilityUtils.checkAccessEnable(name, MainActivity.this)) {
-                SettingUtils.startPage(MainActivity.this);
-            }
 
-            sendEmptyMessageDelayed(0, 30 * 1000);
-        }
-    };
 
 
     private void setPermiss() {

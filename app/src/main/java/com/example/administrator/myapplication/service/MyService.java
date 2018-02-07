@@ -101,7 +101,7 @@ public class MyService extends AccessibilityService {
             }
             if (showFloatView2 == null) {
                 delayHandlerShow.sendEmptyMessageDelayed(2, 200);
-                delayHandler.sendEmptyMessageDelayed(1, Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? 500 : 600);
+                delayHandler.sendEmptyMessageDelayed(1, Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? 500 : 1500);
                 delayHandler.sendEmptyMessageDelayed(3, 480);
             }
         }
