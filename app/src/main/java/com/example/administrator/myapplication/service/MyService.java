@@ -58,29 +58,16 @@ public class MyService extends AccessibilityService {
         if (className.toString().contains("android.widget")) {
             return;
         }
-        if (className.toString().contains("com.tencent.mm.ui.chatting.gallery.ImageGalleryUI")) {
-            isLookPhoto = true;
-//            android.support.design.widget.c
-        }
-        if (isLookPhoto && className.toString().contains("android.support.design.widget.c")) {
-            setFirstInterPage();
-            isLookPhoto = false;
-        }
 
-        if (className.toString().contains("com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI")) {
-            isOpenPhoto = true;
-        }
-        if (!isOpenPhoto && className.toString().contains("com.tencent.mm.plugin.scanner.ui.BaseScanUI")) {
 
-            setFirstInterPage();
-        }
+
 
         if (isPage1(className)) {
             isOpenPhoto = false;
             isEnter1 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来111！");
-//                return;
+                return;
             }
             //
             if (showFloatView == null) {
@@ -97,11 +84,11 @@ public class MyService extends AccessibilityService {
             isEnter2 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("======这是第一次进来222！");
-//                return;
+                return;
             }
             if (showFloatView2 == null) {
                 delayHandlerShow.sendEmptyMessageDelayed(2, 200);
-                delayHandler.sendEmptyMessageDelayed(1, Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? 500 : 1500);
+                delayHandler.sendEmptyMessageDelayed(1, Build.VERSION.SDK_INT < Build.VERSION_CODES.N ? 500 : 700);
                 delayHandler.sendEmptyMessageDelayed(3, 480);
             }
         }
@@ -109,7 +96,8 @@ public class MyService extends AccessibilityService {
             isEnter3 = true;
             if (!SPUtils.getInstance().getBoolean(first_open, false)) {
                 LogUtils.i("====这是第一次进来333！");
-//                return;
+                delayHandlerShow.sendEmptyMessageDelayed(-1, 0);
+                return;
             }
             if (showFloatView3 == null) {
                 showFloatView3 = new ShowFloatView3(this);
@@ -197,7 +185,7 @@ public class MyService extends AccessibilityService {
             switch (msg.what) {
 
                 case -1:
-                    // SPUtils.getInstance().put(first_open, true);
+                     SPUtils.getInstance().put(first_open, true);
                     break;
                 case 2:
                     if (showFloatView2 == null) {
